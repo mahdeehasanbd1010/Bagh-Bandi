@@ -1,5 +1,8 @@
 package application;
 	
+import static application.Main.screenHeight;
+import static application.Main.screenWidth;
+
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 
@@ -7,19 +10,19 @@ import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import static application.Main.screenWidth;
-import static application.Main.screenHeight;
-
 public class OneToOne extends Application {
 	
-	Scene scene; 
+	Scene scene;
 	Pane root;
 	AlquerqueBoard alquerqueBoard;
+	
+	Button quit;
 	
 	int flagForReturnToMenu=0;
 	int next;
@@ -50,6 +53,14 @@ public class OneToOne extends Application {
 		alquerqueBoard = new AlquerqueBoard();
 		root = alquerqueBoard.getRoot();
 		
+		quit = new Button(); 
+		quit.setText("quit");
+		
+		quit.setPrefSize(130, 50);
+		quit.setLayoutX(7*(screenWidth/9));
+		quit.setLayoutY(screenHeight/6);
+		
+		root.getChildren().add(quit);
 		
 		scene = new Scene(root,screenWidth,screenHeight);
 		
@@ -57,6 +68,13 @@ public class OneToOne extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("Bagh Bandi");
 		primaryStage.show();
+		
+		
+		quit.setOnMouseClicked(e1->{
+			
+			backToMenu(primaryStage);
+			
+		});
 		
 		root.setOnMouseClicked( e -> {
 			
@@ -204,7 +222,8 @@ public class OneToOne extends Application {
         						
         					if(i==alquerqueBoard.getPath()[alquerqueBoard.getPath()[next][j]][j] 
         					&& alquerqueBoard.getBoardPoint()[i][2]==0 
-        					&& alquerqueBoard.getBoardPoint()[alquerqueBoard.getPath()[next][j]][2]!=0) {
+        					&& alquerqueBoard.getBoardPoint()[alquerqueBoard.getPath()[next][j]][2]!=0
+        					&& alquerqueBoard.getBoardPoint()[alquerqueBoard.getPath()[next][j]][2]!=100) {
         								
         						selectPosition=i;
             	        			
@@ -352,7 +371,7 @@ public class OneToOne extends Application {
 	
 	public void tigerWon() {
 		
-		if(alquerqueBoard.getGoat().size()==0) {
+		if(alquerqueBoard.getGoat().size()<6) {
 			
 			Label label = new Label();  
 			

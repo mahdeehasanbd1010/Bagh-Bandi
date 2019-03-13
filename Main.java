@@ -11,11 +11,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+
 public class Main extends Application {
 	
 	static int screenWidth,screenHeight;
 	
-	Button playButton,exitButton;
+	Button twoPlayButton,exitButton;
 	
 	@Override
 	public void start(Stage primaryStage) {
@@ -24,12 +25,12 @@ public class Main extends Application {
 		screenWidth = gd.getDisplayMode().getWidth();
 		screenHeight = gd.getDisplayMode().getHeight();
 		
-		playButton = new Button(); 
-		playButton.setText("Two Player");
+		twoPlayButton = new Button(); 
+		twoPlayButton.setText("Two Player");
 		
-		playButton.setPrefSize(screenWidth/5, screenHeight/14);
-		playButton.setLayoutX(2*(screenWidth/5));
-		playButton.setLayoutY(screenHeight/8);
+		twoPlayButton.setPrefSize(screenWidth/5, screenHeight/14);
+		twoPlayButton.setLayoutX(2*(screenWidth/5));
+		twoPlayButton.setLayoutY(screenHeight/8);
 		
 		exitButton = new Button();
 		exitButton.setText("Exit");
@@ -40,16 +41,16 @@ public class Main extends Application {
 		
 		Pane root = new Pane();
 		
-		Image im = new Image("/application/tigerGoatWallpaper.jpg",false);
+		Image im = new Image("/application/tableImage.jpg",false);
         ImageView iv = new ImageView();
         iv.setImage(im);
         iv.setFitWidth(screenWidth);
         iv.setFitHeight(screenHeight);
 		
         root.getChildren().add(iv);
+		root.getChildren().add(exitButton);
+		root.getChildren().add(twoPlayButton);
 		
-		
-		root.getChildren().addAll(playButton,exitButton);
 		
 		Scene scene = new Scene(root,screenWidth,screenHeight);
 		
@@ -60,15 +61,20 @@ public class Main extends Application {
 		primaryStage.setMaximized(true);
 		primaryStage.show();
 		
-		playButton.setOnAction(e->{
+		twoPlayButton.setOnAction(e->{
 			
 			OneToOne OTO = new OneToOne();
+			
 			try {
+				
 				OTO.start(primaryStage);
+			
 			} catch (Exception e1) {
 				
 				e1.printStackTrace();
+				
 			}
+			
 		});
 		
 		exitButton.setOnMouseClicked(e->{

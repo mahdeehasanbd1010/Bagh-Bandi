@@ -1,5 +1,8 @@
 package application;
 
+import static application.Main.screenHeight;
+import static application.Main.screenWidth;
+
 import java.util.ArrayList;
 
 import javafx.scene.image.Image;
@@ -9,9 +12,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-
-import static application.Main.screenHeight;
-import static application.Main.screenWidth;
 
 public class AlquerqueBoard {
 	
@@ -68,13 +68,13 @@ public class AlquerqueBoard {
 			
 		}
 		
-		boardPoint[1][2]=5;
-		boardPoint[3][2]=5;
-		boardPoint[11][2]=5;
-		boardPoint[13][2]=5;
+		boardPoint[7][2]=5;
+		boardPoint[9][2]=5;
+		boardPoint[17][2]=5;
+		boardPoint[19][2]=5;
 		
-		boardPoint[7][2]=100;
-		boardPoint[17][2]=100;
+		boardPoint[11][2]=100;
+		boardPoint[13][2]=100;
 		
 	}
 	
@@ -131,7 +131,7 @@ public class AlquerqueBoard {
 		
 		for(int i=0;i<25;i++) {
 			
-			if(i==1) {
+			if(i==7) {
 				
 				for(int j=0;j<5;j++) {
 					
@@ -158,7 +158,60 @@ public class AlquerqueBoard {
 				
 			}
 			
-			else if(i==3) {
+			else if(i==9) {
+				
+				for(int j=0;j<5;j++) {
+					
+					Circle circle = new Circle();
+			        circle.setCenterX(boardPoint[i][0]);
+			        circle.setCenterY(boardPoint[i][1]);
+			        circle.setRadius(20);
+			        circle.setFill(Color.valueOf("#fff9f4"));
+			        circle.setStroke(Color.BLACK);
+			        circle.setStrokeWidth(3);
+			        
+			        Image im = new Image("/application/goat.jpg",false);
+			        ImageView myImageView = new ImageView();
+			        myImageView.setImage(im);
+			        
+			        circle.setFill(new ImagePattern(im));
+			        
+			        root.getChildren().add(circle);
+			        goat.add(circle);
+			        goatIndex.add(i);
+			        
+				}
+				
+			}
+			
+			else if(i==17) {
+				
+				for(int j=0;j<5;j++) {
+					
+					Circle circle = new Circle();
+			        circle.setCenterX(boardPoint[i][0]);
+			        circle.setCenterY(boardPoint[i][1]);
+			        circle.setRadius(20);
+			        circle.setFill(Color.valueOf("#fff9f4"));
+			        circle.setStroke(Color.BLACK);
+			        circle.setStrokeWidth(3);
+			        
+			        Image im = new Image("/application/goat.jpg",false);
+			        ImageView myImageView = new ImageView();
+			        myImageView.setImage(im);
+			        
+			        circle.setFill(new ImagePattern(im));
+			        
+			        root.getChildren().add(circle);
+			        goat.add(circle);
+			        goatIndex.add(i);
+			        
+				}
+				
+				
+			}
+			
+			else if(i==19) {
 				
 				for(int j=0;j<5;j++) {
 					
@@ -186,59 +239,6 @@ public class AlquerqueBoard {
 			
 			else if(i==11) {
 				
-				for(int j=0;j<5;j++) {
-					
-					Circle circle = new Circle();
-			        circle.setCenterX(boardPoint[i][0]);
-			        circle.setCenterY(boardPoint[i][1]);
-			        circle.setRadius(20);
-			        circle.setFill(Color.valueOf("#fff9f4"));
-			        circle.setStroke(Color.BLACK);
-			        circle.setStrokeWidth(3);
-			        
-			        Image im = new Image("/application/goat.jpg",false);
-			        ImageView myImageView = new ImageView();
-			        myImageView.setImage(im);
-			        
-			        circle.setFill(new ImagePattern(im));
-			        
-			        root.getChildren().add(circle);
-			        goat.add(circle);
-			        goatIndex.add(i);
-			        
-				}
-				
-				
-			}
-			
-			else if(i==13) {
-				
-				for(int j=0;j<5;j++) {
-					
-					Circle circle = new Circle();
-			        circle.setCenterX(boardPoint[i][0]);
-			        circle.setCenterY(boardPoint[i][1]);
-			        circle.setRadius(20);
-			        circle.setFill(Color.valueOf("#fff9f4"));
-			        circle.setStroke(Color.BLACK);
-			        circle.setStrokeWidth(3);
-			        
-			        Image im = new Image("/application/goat.jpg",false);
-			        ImageView myImageView = new ImageView();
-			        myImageView.setImage(im);
-			        
-			        circle.setFill(new ImagePattern(im));
-			        
-			        root.getChildren().add(circle);
-			        goat.add(circle);
-			        goatIndex.add(i);
-			        
-				}
-				
-			}
-			
-			else if(i==7) {
-				
 				Circle circle = new Circle();
 		        circle.setCenterX(boardPoint[i][0]);
 		        circle.setCenterY(boardPoint[i][1]);
@@ -259,7 +259,7 @@ public class AlquerqueBoard {
 		        
 			}
 			
-			else if(i==17) {
+			else if(i==13) {
 				
 				Circle circle = new Circle();
 		        circle.setCenterX(boardPoint[i][0]);
