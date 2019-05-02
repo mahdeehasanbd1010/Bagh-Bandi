@@ -401,6 +401,8 @@ public class EasyLevelAgainstGoat  extends Application {
             			
             		}
         			
+        			
+        			
         		}
         		
         		
@@ -451,7 +453,9 @@ public class EasyLevelAgainstGoat  extends Application {
         			
         			}
         			else {
-            			selectPosition=nextStepForGoat(next);
+            			
+        				
+        				selectPosition=nextStepForGoat(next);
             			
             			
             			System.out.println("selectPosition "+selectPosition);

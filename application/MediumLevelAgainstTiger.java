@@ -21,17 +21,23 @@ import javafx.scene.text.Font;
 
 public class MediumLevelAgainstTiger extends Application {
 	
+	int initialNumberOfTiger=0,initialNumberOfGoat=0;
+	
+	int currentSource,currentDestination,direction;
+	String team;
+	int callbySource,callbyDestination;
+	
+	int source,destination;
+	int[] index=new int[2];
+	
 	Scene scene;
 	Pane root;
 	AlquerqueBoard alquerqueBoard;
-	
 	Button quit;
-	
 	Label tigerCounter,goatCounter;
 	
 	int flagForReturnToMenu=0;
 	int next;
-	int initialNumberOfTiger=0,initialNumberOfGoat=0;
 	
 	boolean click1ForGoat=true,click2ForGoat=false;
 	boolean click1ForTiger=false,click2ForTiger=false;
@@ -212,6 +218,9 @@ public class MediumLevelAgainstTiger extends Application {
         		    		
         		if(click1ForTiger) {
             		
+        			
+        			bestMove(alquerqueBoard.getBoardPoint());
+        			
         			selectTiger=selectionOfTiger();
         			
         			System.out.println("Tiger number : " + selectTiger + " at " + 
@@ -222,6 +231,7 @@ public class MediumLevelAgainstTiger extends Application {
         			next=alquerqueBoard.getTigerIndex().get(selectTiger);
         			
         			click2ForTiger=true;
+        			
         			
         		}
         		
@@ -332,7 +342,7 @@ public class MediumLevelAgainstTiger extends Application {
 		for(int i=0;i<alquerqueBoard.getTiger().size();i++) {
 			
 			int point=alquerqueBoard.getTigerIndex().get(i);
-			System.out.println("Tiger index at " + point);
+			//System.out.println("Tiger index at " + point);
 			
 			for(int j=0;j<8;j++) {
 				
@@ -349,8 +359,10 @@ public class MediumLevelAgainstTiger extends Application {
 								arrayForKilledGoat.add(alquerqueBoard.getPath()[point][j]);
 								forKillingGoatToGo.add(alquerqueBoard.getPath()[alquerqueBoard.getPath()[point][j]][j]);
 								numberOfTigerToKill.add(i);
-								System.out.println( alquerqueBoard.getPath()[alquerqueBoard.getPath()[point][j]][j] +" "
+								
+								/*System.out.println( alquerqueBoard.getPath()[alquerqueBoard.getPath()[point][j]][j] +" "
 										+ alquerqueBoard.getPath()[point][j] + " "+ j +" tiger number : " + i );
+								*/
 								
 								flagForSelectingTiger=1;
 							}
@@ -367,12 +379,12 @@ public class MediumLevelAgainstTiger extends Application {
 		}
 		
 		//print the triple parameter
-		for(int i=0;i<forKillingGoatToGo.size();i++) {
+		/*for(int i=0;i<forKillingGoatToGo.size();i++) {
 					
 			System.out.println("forKillingGoatToGo "+forKillingGoatToGo.get(i)+" arrayForKilledGoat " 
 					+arrayForKilledGoat.get(i) + " numberOfTigerToKill " + numberOfTigerToKill.get(i));
 					
-		}
+		}*/
 		
 		
 		if(flagForSelectingTiger==1) {
@@ -443,7 +455,7 @@ public class MediumLevelAgainstTiger extends Application {
 	
 	public void killTheGoat(int index) {
 		
-		System.out.println("Goat killed at " + index);
+		//System.out.println("Goat killed at " + index);
 		
 		for(int i=0;i<alquerqueBoard.getGoat().size();i++) {
 			
@@ -461,7 +473,7 @@ public class MediumLevelAgainstTiger extends Application {
 				alquerqueBoard.getGoat().remove(i);
 				alquerqueBoard.getGoatIndex().remove(i);
 			
-				System.out.println("Number of the goat killed  " + i);
+				//System.out.println("Number of the goat killed  " + i);
 				break;
 			}
 			
@@ -610,10 +622,11 @@ public class MediumLevelAgainstTiger extends Application {
 		
 	}
 	
-	public void bestMove(int[][] arr,Queue<Integer> queue,
-			int controlDoubleployForSource,int controlDoubleployForDestination) {
+	public void bestMove(int[][] arr) {
 		
 		int bestValue=-100000;
+		
+		System.out.println("Best Move!!!");
 		
 		int[][] boardPoint = new int[25][3];
 		
@@ -635,33 +648,402 @@ public class MediumLevelAgainstTiger extends Application {
 		}
 		
 		initialNumberOfGoat=count1;
+		
 		initialNumberOfTiger=count2;
 		
-		boolean firstcheck1=false,firstcheck2=false;
+		System.out.println("count1 : " + count1 +" count2 : " + count2);
 		
-		
-		for(int i=0;i<alquerqueBoard.getTiger().size();i++) {
+		for(int i=0;i<25;i++) {
 			
-			int element = i;
+			if(boardPoint[i][2]==100) {
+				
+				int element = i;
 			
-			for(int j=7;j>=0;j--) {
+				for(int j=0;j<8;j++) {
 				
-				int temp=0,tempX1=0,tempX2=0;
-				tempX1=element;
-				temp=alquerqueBoard.getPath()[element][j];
-				tempX2=temp;
+					int firstStep = alquerqueBoard.getPath()[element][j];
 				
+					if(firstStep>=0) {
+					
+						System.out.println("oneStep : " + firstStep);
+						
+						if(boardPoint[firstStep][2]==0) {
+							
+							System.out.println("Tiger at " + element
+									+ " firstStep " + firstStep );
+								
+							
+							
+							boardPoint[element][2]=0;
+							boardPoint[firstStep][2]=100;
+							
+							
+							currentSource=element;
+		                    currentDestination=firstStep;
+							
+		                    callbySource=element;
+			                callbyDestination=firstStep;
+		                    
+		                    int moveValue = minimax(boardPoint,-1000000,1000000,1,false);
+		                    
+		                    
+		                    boardPoint[element][2]=100;
+							boardPoint[firstStep][2]=0;
+							
+							if (moveValue > bestValue) {
+		                    	
+								System.out.println("move value : " +moveValue 
+		                    			+ " best value : " + bestValue );
+		                    	
+		                    	index[0]=element;
+		                    	index[1]=j;
+			                    bestValue = moveValue;
+			                    
+			                    source=element;
+			                    destination=firstStep;
+			                    
+		                    	
+		                    }
+							
+							
+						}
+						
+						
+						else if(boardPoint[firstStep][2]!=0&&boardPoint[firstStep][2]!=100) {
+						
+							System.out.println("vitore oneStep : " + firstStep);
+						
+							int secondStep = alquerqueBoard.getPath()[firstStep][j];
+						
+							if(secondStep>=0) {
+							
+								System.out.println("secondStep : " + secondStep);
+							
+								if(boardPoint[secondStep][2]==0) {
+								
+									System.out.println("vitore secondStep : " + secondStep);
+								
+									System.out.println("Tiger at " + element
+										+ " firstStep " + firstStep + " secondStep " + secondStep);
+								
+								
+									
+									
+									boardPoint[element][2]=0;
+									boardPoint[firstStep][2]--;
+									boardPoint[secondStep][2]=100;
+									
+									
+									currentSource=element;
+				                    currentDestination=secondStep;
+									
+				                    callbySource=element;
+					                callbyDestination=secondStep;
+					                
+				                    
+				                    int moveValue = minimax(boardPoint,-1000000,1000000,1,false);
+				                    
+				                    
+				                    boardPoint[element][2]=100;
+									boardPoint[firstStep][2]++;
+									boardPoint[secondStep][2]=0;
+									
+									if (moveValue > bestValue) {
+				                    	
+										System.out.println("move value : " +moveValue 
+				                    			+ " best value : " + bestValue );
+				                    	
+				                    	index[0]=element;
+				                    	index[1]=j;
+					                    bestValue = moveValue;
+					                    
+					                    source=element;
+					                    destination=secondStep;
+					                    
+				                    	
+				                    }
+				                    
+				                    
+								}
+								
+							}
+							
+						}
+					}
+				}
 				
 			}
 			
-			
-			
 		}
+		
 		
 	}
 	
+	public int minimax(int[][] boardPoint,int alpha,int beta, int depth, boolean isMax) {
+		
+		int count1=0,count2=0;
+		
+		for(int i=0;i<boardPoint.length;i++) {
+			
+			
+			if(boardPoint[i][2]!=100 && boardPoint[i][2]!=0) count1+=boardPoint[i][2];
+			if(boardPoint[i][2]==100) count2++;
+				
+		}
+		
+		System.out.println("minimax -> count1 : " + count1 +" count2 : " + count2);
+		
+		
+		if(depth==0) {
+			
+			return 0;
+		}
+		
+		if(isMax) {
+			
+			for(int i=0;i<25;i++) {
+				
+				int element=i;
+				
+				if(boardPoint[element][2]==100) {
+					
+					for(int j=0;j<8;j++) {
+						
+						int firstStep = alquerqueBoard.getPath()[element][j];
+						
+						
+						if(firstStep >= 0) {
+							
+							int secondStep=alquerqueBoard.getPath()[firstStep][j];
+							
+							if(boardPoint[firstStep][2]==0) {
+								
+								boardPoint[element][2]=0;
+								boardPoint[firstStep][2]=100;
+								
+								team="AI";
+								
+								currentSource=element;
+			                    currentDestination=firstStep;
+			                    direction=j;
+								
+								
+								alpha= Math.max( alpha,minimax(boardPoint,alpha,beta, depth-1, !isMax) );
+								
+								
+								
+								boardPoint[element][2]=100;
+								boardPoint[firstStep][2]=0;
+								
+								if(alpha>=beta) {
+									
+									return alpha;
+								}
+								
+							}
+							
+							else if(secondStep>=0 && boardPoint[firstStep][2]!=0
+									&& boardPoint[firstStep][2]!=100 && boardPoint[secondStep][2]==0) {
+								
+								boardPoint[element][2]=0;
+								boardPoint[firstStep][2]--;
+								boardPoint[secondStep][2]=100;
+									
+								team="AI";
+								
+								currentSource=element;
+			                    currentDestination=secondStep;
+			                    direction=j;
+								
+								
+								alpha= Math.max( alpha,minimax(boardPoint,alpha,beta, depth-1, !isMax) );
+								
+								boardPoint[element][2]=100;
+								boardPoint[firstStep][2]++;
+								boardPoint[secondStep][2]=0;
+								
+								if(alpha>=beta) {
+									 
+									 return alpha;
+								 }
+								
+							}
+							
+						}	
+						
+						
+					}
+						
+					
+				}
+				
+				
+			}
+		
+			team="AI";
+	        
+	        return alpha;
+		}
+		
+		else {
+			
+			for(int i=0;i<25;i++) {
+				
+				int element=i;
+				
+				if(boardPoint[element][2]!=0 && boardPoint[element][2]!=100) {
+					
+					for(int j=0;j<8;j++) {
+						
+						int firstStep = alquerqueBoard.getPath()[element][j];
+						
+						if(firstStep>=0) {
+							
+							if(boardPoint[firstStep][2]==0) {
+								
+								boardPoint[element][2]--;
+								boardPoint[firstStep][2]++;
+								
+								team="Human";
+								
+								currentSource=element;
+			                    currentDestination=firstStep;
+			                    direction=j;
+								
+			                    beta= Math.min(beta,minimax(boardPoint,alpha,beta, depth-1, !isMax) );
+			                    
+			                    
+			                    boardPoint[element][2]++;
+								boardPoint[firstStep][2]--;
+								
+								if(alpha>=beta) {
+									 
+									 return beta;
+								}
+								
+							}
+							
+						}
+						
+					}
+					
+				}
+				
+			}
+			
+			team="Human";
+			
+	        return beta;
+	        
+		}
+		
+		
+		
 	
+	
+	}
+	
+	
+	public void killedTheAITiger(int[][] arr) {
+		
+		int count=0,marker=0,flag;
+		int[][] boardPoint =  new int[25][3];
+		
+		for(int i=0;i<25;i++)
+		{
+			for(int j=0;j<3;j++) {
+				
+				boardPoint[i][j]=arr[i][j];
+				
+			}
+		}
+		
+		for(int i=0;i<25;i++) {
+			
+			flag=1;
+			
+			if(boardPoint[i][2]==100) {
+			
+				int element=i;
+				
+				for(int j=0;j<8;j++) {
+					
+					if(alquerqueBoard.getPath()[element][j]>=0) {
+						
+						if(boardPoint[alquerqueBoard.getPath()[element][j]] [2]==0) {
+							
+							flag=0;
+							break;
+							
+						}
+						
+						if(alquerqueBoard.getPath()
+								[alquerqueBoard.getPath()[element][j]][j]>=0) {
+							
+							if( boardPoint[alquerqueBoard.getPath()[alquerqueBoard.getPath()
+							         [element][j]][j]] [2]==0) {
+								
+								flag=0;
+								break;
+								
+							}
+							
+						}
+							
+					}	
+					
+				}
+				
+				if(flag==1)
+				{
+					marker=i;
+					count++;
+				}
+		
+			}
+			
+		}
+		
+		if(count==1) {
+			
+			boardPoint[marker][2]-=100;
+					
+			root.getChildren().remove(alquerqueBoard.getTiger().get(marker));
+			alquerqueBoard.getTiger().remove(marker);
+			alquerqueBoard.getTigerIndex().remove(marker);
+			
+			System.out.println("Number of the Tiger killed  " + marker);
+			
+		}
+		
+		else if(count==2) {
+				
+			boardPoint[alquerqueBoard.getTigerIndex().get(0)][2]-=100;
+				
+			root.getChildren().remove(alquerqueBoard.getTiger().get(0));
+			alquerqueBoard.getTiger().remove(0);
+			alquerqueBoard.getTigerIndex().remove(0);
+			
+			System.out.println("Number of the Tiger killed  " + 0);
+			
+			boardPoint[alquerqueBoard.getTigerIndex().get(0)][2]-=100;
+			
+			root.getChildren().remove(alquerqueBoard.getTiger().get(0));
+			alquerqueBoard.getTiger().remove(0);
+			alquerqueBoard.getTigerIndex().remove(0);
+			
+			System.out.println("Number of the Tiger killed  " + 0);
+			
+		}
+		
+		
+	}
 
+	
+	
+	
+	
+	
 }
 
 
