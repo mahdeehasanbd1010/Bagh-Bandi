@@ -13,8 +13,17 @@ import javafx.stage.Stage;
 
 public class SinglePlayer extends Application {
 
-	Button easy,medium,hard;
+	Button easy,medium,hard,back;
 	Scene scene;
+	
+	
+	public void backToMain(Stage primaryStage) throws Exception {
+		
+		Main main = new Main();
+		main.start(primaryStage);
+		
+	}
+	
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -38,6 +47,15 @@ public class SinglePlayer extends Application {
 		hard.setLayoutX(2*(screenWidth/5));
 		hard.setLayoutY(3*(screenHeight/8));
 		
+		back = new Button(); 
+		back.setText("Back");
+		back.setPrefSize(screenWidth/5, screenHeight/14);
+		back.setLayoutX(2*(screenWidth/5));
+		back.setLayoutY(4*(screenHeight/8));
+		
+		
+		
+		
 		Pane root = new Pane();
 		
 		Image im = new Image("/application/tableImage.jpg",false);
@@ -48,7 +66,7 @@ public class SinglePlayer extends Application {
 		
         root.getChildren().add(iv);
 		
-		root.getChildren().addAll(easy,medium,hard);
+		root.getChildren().addAll(easy,medium,hard,back);
 		
 		
 		scene = new Scene(root,screenWidth,screenHeight);
@@ -103,6 +121,18 @@ public class SinglePlayer extends Application {
 			
 			} catch (Exception e1) {
 				
+				e1.printStackTrace();
+			}
+			
+		});
+		
+		
+		back.setOnMouseClicked(e->{
+			
+			try {
+				backToMain(primaryStage);
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			

@@ -2,11 +2,13 @@
 
 .button{
 	
+	-fx-background-color: rgba(0, 0, 0, 0.5);
     -fx-background-insets: 0,1,2;
     -fx-background-radius: 3,2,1;
     -fx-padding: 3 30 3 30;
-    -fx-text-fill: blue;
+    -fx-text-fill: rgb(135,206,250);
     -fx-font-size: 30px;
+    
     
 }
 

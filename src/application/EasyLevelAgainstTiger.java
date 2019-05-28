@@ -39,12 +39,15 @@ public class EasyLevelAgainstTiger extends Application {
 	Scene scene;
 	Pane root;
 	AlquerqueBoard alquerqueBoard;
+	
 	Button quit,start;
-	Label tigerCounter,goatCounter;
+	Label tigerCounter,goatCounter,numberOfGoat,numberOfTiger;
 	
 	int flagForKillTheTiger=0;
-	int flagForReturnToMenu=0;
+	int flagForReturnToEasyLevel=0;
 	int next;
+	
+	boolean startOn=true,play=false;
 	
 	boolean click1ForGoat=true,click2ForGoat=false;
 	boolean click1ForTiger=false,click2ForTiger=false;
@@ -57,10 +60,10 @@ public class EasyLevelAgainstTiger extends Application {
 	
 	int []tempIndex = new int[25];
 	
-	public void backToMenu(Stage primaryStage) {
+	public void backToEasyLevel(Stage primaryStage) {
 		
-		Main main = new Main();
-		main.start(primaryStage);
+		EasyLevel EL = new EasyLevel();
+		EL.start(primaryStage);
 		
 	}
 	
@@ -87,7 +90,7 @@ public class EasyLevelAgainstTiger extends Application {
 		start = new Button(); 
 		start.setText("start");
 		
-		start.setPrefSize(130, 50);
+		start.setPrefSize(150, 50);
 		start.setLayoutX(7*(screenWidth/9));
 		start.setLayoutY(3*(screenHeight/6)/2);
 		
@@ -105,23 +108,67 @@ public class EasyLevelAgainstTiger extends Application {
 		
 		quit.setOnMouseClicked(e1->{
 			
-			backToMenu(primaryStage);
+			backToEasyLevel(primaryStage);
 			
 		});
 		
 		
 		start.setOnMouseClicked(e->{
 			
-			goatCounter = new Label();
-			goatCounter.setText("Goat's turn");
-			goatCounter.relocate((5*(double)screenWidth)/8,
-					(1*(double)screenHeight)/12);
 			
-			goatCounter.setTextFill(Color.GREEN);
-			goatCounter.setFont(new Font("Arial",30));
+			if(startOn==true) {
+				
+				goatCounter = new Label();
+				goatCounter.setText("Goat's turn");
+				goatCounter.relocate((5*(double)screenWidth)/8,
+						(1*(double)screenHeight)/12);
+				
+				goatCounter.setTextFill(Color.GREEN);
+				goatCounter.setFont(new Font("Arial",30));
+				
+				root.getChildren().add(goatCounter);
+				
+				
+				
+				
+				numberOfGoat = new Label();
+				numberOfGoat.setText("Goat : " + alquerqueBoard.getGoat().size());
+				numberOfGoat.relocate((2*(double)screenWidth)/8,
+						(1*(double)screenHeight)/12);
+				
+				numberOfGoat.setTextFill(Color.GREEN);
+				numberOfGoat.setFont(new Font("Arial",30));
+				
+				
+				numberOfTiger = new Label();
+				numberOfTiger.setText("Tiger : " + alquerqueBoard.getTiger().size());
+				numberOfTiger.relocate((3*(double)screenWidth)/8,
+						(1*(double)screenHeight)/12);
+				
+				numberOfTiger.setTextFill(Color.RED);
+				numberOfTiger.setFont(new Font("Arial",30));
+				
+				root.getChildren().addAll(numberOfGoat,numberOfTiger);
+				
+				
+				
+				startOn=false;
+				
+			}
 			
-			root.getChildren().add(goatCounter);
+			if(play==true) {
+				
+				play=false;
+				start.setText("start");
+			}
 			
+			else {
+				
+				play=true;
+				start.setText("pause");
+			}	
+					
+    		
 			
 		});
 		
@@ -131,8 +178,10 @@ public class EasyLevelAgainstTiger extends Application {
 		root.setOnMouseClicked( e -> {
 			
 			
-        	if(flagForReturnToMenu==1) backToMenu(primaryStage);
+        	if(flagForReturnToEasyLevel==1) backToEasyLevel(primaryStage);
 			
+          if(play==true) {
+                	
 			int mouseClickX=(int)e.getX();
         	int mouseClickY=(int)e.getY();
         	
@@ -234,6 +283,10 @@ public class EasyLevelAgainstTiger extends Application {
         				}
         					
         			}
+        			
+        			numberOfGoat.setText("Goat : " + alquerqueBoard.getGoat().size());
+        	    	numberOfTiger.setText("Tiger : " + alquerqueBoard.getTiger().size());
+        	    	
         			
         		}
         		    		
@@ -364,6 +417,9 @@ public class EasyLevelAgainstTiger extends Application {
         	    			System.out.println("Break4");
                 			
         	            	
+        	    			numberOfGoat.setText("Goat : " + alquerqueBoard.getGoat().size());
+                	    	numberOfTiger.setText("Tiger : " + alquerqueBoard.getTiger().size());
+                	    	
         	        		
         	        		
         	        	}
@@ -385,6 +441,7 @@ public class EasyLevelAgainstTiger extends Application {
         	
         }
         	
+      }  	
         for(int j=0;j<25;j++) {
     			
     		System.out.println(j+"  "+alquerqueBoard.getBoardPoint()[j][2]);
@@ -610,7 +667,7 @@ public class EasyLevelAgainstTiger extends Application {
 			root.getChildren().add(label);
 			root.getChildren().remove(goatCounter);
 			  
-			flagForReturnToMenu=1;
+			flagForReturnToEasyLevel=1;
 			
 			click1ForGoat=false;
 			click2ForGoat=false;
@@ -721,7 +778,7 @@ public class EasyLevelAgainstTiger extends Application {
 			root.getChildren().add(label);
 			root.getChildren().remove(tigerCounter);
 			
-			flagForReturnToMenu=1;
+			flagForReturnToEasyLevel=1;
 			
 			click1ForGoat=false;
 			click2ForGoat=false;

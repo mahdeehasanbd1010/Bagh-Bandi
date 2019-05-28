@@ -23,12 +23,16 @@ public class TwoPlayer extends Application {
 	Pane root;
 	AlquerqueBoard alquerqueBoard;
 	
-	Button quit;
+	Button quit,start;
 	Timer timer;
-	Label tigerCounter,goatCounter;
+	
+	Label tigerCounter,goatCounter,numberOfGoat,numberOfTiger;
 	
 	int flagForReturnToMenu=0;
 	int next;
+	
+	
+	boolean play=false,startOn=true;
 	
 	boolean click1ForGoat=true,click2ForGoat=false;
 	boolean click1ForTiger=false,click2ForTiger=false;
@@ -65,7 +69,17 @@ public class TwoPlayer extends Application {
 		quit.setLayoutX(7*(screenWidth/9));
 		quit.setLayoutY(screenHeight/6);
 		
-		root.getChildren().add(quit);
+		
+		start = new Button(); 
+		start.setText("start");
+		
+		start.setPrefSize(150, 50);
+		start.setLayoutX(7*(screenWidth/9));
+		start.setLayoutY(3*(screenHeight/6)/2);
+		
+		
+		
+		root.getChildren().addAll(quit,start);
 		
 		scene = new Scene(root,screenWidth,screenHeight);
 		
@@ -76,6 +90,69 @@ public class TwoPlayer extends Application {
 		primaryStage.show();
 		
 		
+		
+		start.setOnMouseClicked(e1->{
+			
+
+			if(startOn==true) {
+				
+				goatCounter = new Label();
+				goatCounter.setText("Goat's turn");
+				goatCounter.relocate((5*(double)screenWidth)/8,
+						(1*(double)screenHeight)/12);
+				
+				goatCounter.setTextFill(Color.GREEN);
+				goatCounter.setFont(new Font("Arial",30));
+				
+				root.getChildren().add(goatCounter);
+				
+				
+				
+				
+				numberOfGoat = new Label();
+				numberOfGoat.setText("Goat : " + alquerqueBoard.getGoat().size());
+				numberOfGoat.relocate((2*(double)screenWidth)/8,
+						(1*(double)screenHeight)/12);
+				
+				numberOfGoat.setTextFill(Color.GREEN);
+				numberOfGoat.setFont(new Font("Arial",30));
+				
+				
+				numberOfTiger = new Label();
+				numberOfTiger.setText("Tiger : " + alquerqueBoard.getTiger().size());
+				numberOfTiger.relocate((3*(double)screenWidth)/8,
+						(1*(double)screenHeight)/12);
+				
+				numberOfTiger.setTextFill(Color.RED);
+				numberOfTiger.setFont(new Font("Arial",30));
+				
+				root.getChildren().addAll(numberOfGoat,numberOfTiger);
+				
+				
+				
+				startOn=false;
+				
+			}
+			
+			
+			
+			
+			if(play==true) {
+				
+				play=false;
+				start.setText("start");
+			}
+			
+			else {
+				
+				play=true;
+				start.setText("pause");
+			}
+			
+		});
+		
+		
+		
 		quit.setOnMouseClicked(e1->{
 			
 			backToMenu(primaryStage);
@@ -84,22 +161,17 @@ public class TwoPlayer extends Application {
 		
 		
 		
-		goatCounter = new Label();
-		goatCounter.setText("Goat's turn");
-		goatCounter.relocate((5*(double)screenWidth)/8,
-				(1*(double)screenHeight)/12);
 		
-		goatCounter.setTextFill(Color.GREEN);
-		goatCounter.setFont(new Font("Arial",30));
 		
-		root.getChildren().add(goatCounter);
 			
 		
 		root.setOnMouseClicked( e -> {
 			
 			
         	if(flagForReturnToMenu==1) backToMenu(primaryStage);
-			
+		  
+          if(play==true) {	
+        	
 			int mouseClickX=(int)e.getX();
         	int mouseClickY=(int)e.getY();
         	
@@ -139,6 +211,10 @@ public class TwoPlayer extends Application {
         			click2ForGoat=true;
         			
         			System.out.println("Break1");
+        			
+        			numberOfGoat.setText("Goat : " + alquerqueBoard.getGoat().size());
+        	    	numberOfTiger.setText("Tiger : " + alquerqueBoard.getTiger().size());
+        			
         			break;
         		
         		}
@@ -234,6 +310,10 @@ public class TwoPlayer extends Application {
         			
         			
         			System.out.println("Break3");
+        			
+        			numberOfGoat.setText("Goat : " + alquerqueBoard.getGoat().size());
+        	    	numberOfTiger.setText("Tiger : " + alquerqueBoard.getTiger().size());
+        	    	
         			break;
         		}
         		    		
@@ -352,7 +432,8 @@ public class TwoPlayer extends Application {
         		}
         		
         	}
-        	
+          }
+          
         	for(int j=0;j<25;j++) {
     			
     			System.out.println(j+"  "+alquerqueBoard.getBoardPoint()[j][2]);

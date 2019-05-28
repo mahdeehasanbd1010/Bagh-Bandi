@@ -17,7 +17,17 @@ import javafx.stage.Stage;
 public class HardLevel extends Application{
 
 	Scene scene;
-	Button tiger , goat;
+	Button tiger , goat , back ;
+	
+	
+	public void backToSinglePlayer(Stage primaryStage) throws Exception {
+		
+		SinglePlayer SP = new SinglePlayer();
+		SP.start(primaryStage);
+		
+	}
+	
+	
 	@Override
 	public void start(Stage primaryStage) {
 		
@@ -29,13 +39,22 @@ public class HardLevel extends Application{
 		tiger.setText("Tiger");
 		tiger.setPrefSize(screenWidth/5,screenHeight/14);
 		tiger.setLayoutX(2*(screenWidth/5));
-		tiger.setLayoutY(1*(screenHeight/8));
+		tiger.setLayoutY(2*(screenHeight/8));
 		
 		goat = new Button(); 
 		goat.setText("Goat");
 		goat.setPrefSize(screenWidth/5, screenHeight/14);
 		goat.setLayoutX(2*(screenWidth/5));
-		goat.setLayoutY(2*(screenHeight/8));
+		goat.setLayoutY(1*(screenHeight/8));
+		
+		
+		back = new Button(); 
+		back.setText("Back");
+		back.setPrefSize(screenWidth/5, screenHeight/14);
+		back.setLayoutX(2*(screenWidth/5));
+		back.setLayoutY(3*(screenHeight/8));
+		
+		
 		
 		
 		Pane root = new Pane();
@@ -48,7 +67,7 @@ public class HardLevel extends Application{
 		
         root.getChildren().add(iv);
 		
-		root.getChildren().addAll(tiger,goat);
+		root.getChildren().addAll(tiger,goat,back);
 		
 		
 		scene = new Scene(root,screenWidth,screenHeight);
@@ -89,6 +108,18 @@ public class HardLevel extends Application{
 			
 			} catch (Exception e1) {
 				
+				e1.printStackTrace();
+			}
+			
+		});
+		
+		
+		back.setOnMouseClicked(e->{
+			
+			try {
+				backToSinglePlayer(primaryStage);
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			

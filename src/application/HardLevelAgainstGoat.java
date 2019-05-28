@@ -41,12 +41,15 @@ public class HardLevelAgainstGoat  extends Application {
 	
 	Button quit,start;
 	Timer timer;
-	Label tigerCounter,goatCounter;
+	Label tigerCounter,goatCounter,numberOfGoat,numberOfTiger;
 	
 	
 	int flagForKillTheTiger=0;
-	int flagForReturnToMenu=0;
+	int flagForReturnToHardLevel=0;
 	int next;
+	
+	
+	boolean startOn=true,play=false;
 	
 	boolean click1ForGoat=true,click2ForGoat=false;
 	boolean click1ForTiger=false,click2ForTiger=false;
@@ -58,10 +61,10 @@ public class HardLevelAgainstGoat  extends Application {
 	
 	int []tempIndex = new int[25];
 	
-	public void backToMenu(Stage primaryStage) {
+	public void backToHardLevel(Stage primaryStage) {
 		
-		Main main = new Main();
-		main.start(primaryStage);
+		HardLevel HL = new HardLevel();
+		HL.start(primaryStage);
 		
 	}
 	
@@ -88,7 +91,7 @@ public class HardLevelAgainstGoat  extends Application {
 		start = new Button(); 
 		start.setText("start");
 		
-		start.setPrefSize(130, 50);
+		start.setPrefSize(150, 50);
 		start.setLayoutX(7*(screenWidth/9));
 		start.setLayoutY(3*(screenHeight/6)/2);
 		
@@ -108,24 +111,69 @@ public class HardLevelAgainstGoat  extends Application {
 		
 		quit.setOnMouseClicked(e1->{
 			
-			backToMenu(primaryStage);
+			backToHardLevel(primaryStage);
 			
 		});
 		
+		
+		
+		
 		start.setOnMouseClicked(e->{
 			
-			goatCounter = new Label();
-			goatCounter.setText("Goat's turn");
-			goatCounter.relocate((5*(double)screenWidth)/8,
-					(1*(double)screenHeight)/12);
 			
-			goatCounter.setTextFill(Color.GREEN);
-			goatCounter.setFont(new Font("Arial",30));
+			if(startOn==true) {
+				
+				goatCounter = new Label();
+				goatCounter.setText("Goat's turn");
+				goatCounter.relocate((5*(double)screenWidth)/8,
+						(1*(double)screenHeight)/12);
+				
+				goatCounter.setTextFill(Color.GREEN);
+				goatCounter.setFont(new Font("Arial",30));
+				
+				root.getChildren().add(goatCounter);
+				
+				
+				
+				
+				numberOfGoat = new Label();
+				numberOfGoat.setText("Goat : " + alquerqueBoard.getGoat().size());
+				numberOfGoat.relocate((2*(double)screenWidth)/8,
+						(1*(double)screenHeight)/12);
+				
+				numberOfGoat.setTextFill(Color.GREEN);
+				numberOfGoat.setFont(new Font("Arial",30));
+				
+				
+				numberOfTiger = new Label();
+				numberOfTiger.setText("Tiger : " + alquerqueBoard.getTiger().size());
+				numberOfTiger.relocate((3*(double)screenWidth)/8,
+						(1*(double)screenHeight)/12);
+				
+				numberOfTiger.setTextFill(Color.RED);
+				numberOfTiger.setFont(new Font("Arial",30));
+				
+				root.getChildren().addAll(numberOfGoat,numberOfTiger);
+				
+				
+				chooseMoveGoat();
+				
+				
+				startOn=false;
+				
+			}
 			
-			root.getChildren().add(goatCounter);
+			if(play==true) {
+				
+				play=false;
+				start.setText("start");
+			}
 			
-			
-			chooseMoveGoat();
+			else {
+				
+				play=true;
+				start.setText("pause");
+			}	
 					
     		
 			
@@ -133,11 +181,15 @@ public class HardLevelAgainstGoat  extends Application {
 		
 		
 		
+		
+		
 		root.setOnMouseClicked( e -> {
 			
 			
-        	if(flagForReturnToMenu==1) backToMenu(primaryStage);
+        	if(flagForReturnToHardLevel==1) backToHardLevel(primaryStage);
 			
+        if(play==true) {
+        	
 			int mouseClickX=(int)e.getX();
         	int mouseClickY=(int)e.getY();
         	
@@ -278,7 +330,10 @@ public class HardLevelAgainstGoat  extends Application {
         						
         			}
         			
-  
+        			
+        			numberOfGoat.setText("Goat : " + alquerqueBoard.getGoat().size());
+        	    	numberOfTiger.setText("Tiger : " + alquerqueBoard.getTiger().size());
+        	    	
         		}
         		
         		
@@ -319,6 +374,7 @@ public class HardLevelAgainstGoat  extends Application {
             		
             		//click1ForGoat=true;
             		click2ForGoat=true;
+            		
             		
             		
         			
@@ -381,7 +437,8 @@ public class HardLevelAgainstGoat  extends Application {
         	            		
         	            	
         	            	click1ForGoat=false;
-        	            	click2ForGoat=false;	
+        	            	click2ForGoat=false;
+        	            	
         	            	click1ForTiger=true;
         	            	
         	            	
@@ -401,6 +458,10 @@ public class HardLevelAgainstGoat  extends Application {
                     				
                     		goatWon();
         	        		
+                    		
+                    		numberOfGoat.setText("Goat : " + alquerqueBoard.getGoat().size());
+                        	numberOfTiger.setText("Tiger : " + alquerqueBoard.getTiger().size());
+                    		
         	        	}
         	        		
         	            	
@@ -421,6 +482,9 @@ public class HardLevelAgainstGoat  extends Application {
         		
         	}
         	
+        	
+          }
+        	
         	for(int j=0;j<25;j++) {
     			
     			System.out.println(j+"  "+alquerqueBoard.getBoardPoint()[j][2]);
@@ -440,132 +504,149 @@ public class HardLevelAgainstGoat  extends Application {
 				updateBorard();
             }
 		}.start();
+		
+		
 	}
 	
 	
 	
 	public void chooseMoveGoat() {
 		
-		
-		
-		Line colorLine;
-		
-		sourceArray =  bestMove(alquerqueBoard.getBoardPoint());
-		
-		
-		System.out.println("sourceArray[0] : " + sourceArray[0] + " sourceArray[1] : "
-				+ sourceArray[1]);
-		
-			for(int k=0;k<alquerqueBoard.getGoat().size();k++) {
+		if(click1ForGoat) {
 			
-			if(alquerqueBoard.getGoatIndex().get(k)==sourceArray[0]) {
+			sourceArray =  bestMove(alquerqueBoard.getBoardPoint());
+			
+			
+			System.out.println("sourceArray[0] : " + sourceArray[0] + " sourceArray[1] : "
+					+ sourceArray[1]);
+			
+			
+			for(int k=0;k<alquerqueBoard.getGoat().size();k++) {
 				
-				selectGoat=k;
-				
-				System.out.println("alquerqueBoard.getGoatIndex().get(k) : " 
-        				+ alquerqueBoard.getGoatIndex().get(k) 
-        						+ " sourceArray[0] : "
-               					+ sourceArray[0]);
+				if(alquerqueBoard.getGoatIndex().get(k)==sourceArray[0]) {
+					
+					selectGoat=k;
+					
+					System.out.println("alquerqueBoard.getGoatIndex().get(k) : " 
+        					+ alquerqueBoard.getGoatIndex().get(k) 
+        							+ " sourceArray[0] : "
+                					+ sourceArray[0]);
+					
+				}
 				
 			}
 			
+			
+			
+			
+    		System.out.println("select goat " + selectGoat + " at " + 
+    		alquerqueBoard.getGoatIndex().get(selectGoat));
+    		
+    		alquerqueBoard.getGoat().get(selectGoat).setStroke(Color.valueOf("#90ee90"));
+    		
+    		next=alquerqueBoard.getGoatIndex().get(selectGoat);
+    		
+    		
+    		click1ForGoat=true;
+    		click2ForGoat=true;
+    		
+    		
+			
 		}
-			
-			
-			
-			
-    	System.out.println("select goat " + selectGoat + " at " + 
-    	alquerqueBoard.getGoatIndex().get(selectGoat));
-    		
-    	alquerqueBoard.getGoat().get(selectGoat).setStroke(Color.valueOf("#90ee90"));
-    	
-    	next=alquerqueBoard.getGoatIndex().get(selectGoat);
-    		
-    		
-    	colorLine = new Line(alquerqueBoard.getBoardPoint()[sourceArray[0]][0],
-    			alquerqueBoard.getBoardPoint()[sourceArray[0]][1],
-    			alquerqueBoard.getBoardPoint()[alquerqueBoard.getPath()[sourceArray[0]][sourceArray[1]]][0],
-    			alquerqueBoard.getBoardPoint()[alquerqueBoard.getPath()[sourceArray[0]][sourceArray[1]]][1]);
-    	
-    	colorLine.setFill(Color.valueOf("#90ee90"));
-    	colorLine.setStroke(Color.valueOf("#90ee90"));
-    	colorLine.setStrokeWidth(5);
-    	
-    	root.getChildren().add(colorLine);
-    	
-    	//click2ForGoat=true;
-    	
-		
-				
-				
-				
-		Task<Void> sleeper = new Task<Void>() {
-            @Override
-            protected Void call() throws Exception {
-                try {
-                    Thread.sleep(1500);
-                } catch (InterruptedException e) {
-                }
-                return null;
-            }
-        };
-        sleeper.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-            @Override
-            public void handle(WorkerStateEvent event) {
-            	 
-            	
-        		selectPosition = destination;
-            		
-        		
-            	System.out.println("selectPosition "+selectPosition);
-            	
-            	System.out.println(next+" next--> "+selectPosition + " goat("+selectGoat+")");
-        		
-        		
-            	alquerqueBoard.getBoardPoint()[selectPosition][2]++;
-        		
-            	alquerqueBoard.getBoardPoint()[next][2]--;
-        		
-            	killedTheTiger();
-        		
-            	alquerqueBoard.getGoatIndex().set(selectGoat,selectPosition);
-            	alquerqueBoard.getGoat().get(selectGoat).setStroke(Color.BLACK);
-            		
-            	
-            	click1ForGoat=false;
-            		
-            	click1ForTiger=true;
-            	
-            	
-            	root.getChildren().remove(colorLine);
-            	
-            	tigerCounter = new Label();
-        		tigerCounter.setText("Tiger's turn");
-        		tigerCounter.relocate((5*(double)screenWidth)/8,
-        				(1*(double)screenHeight)/12);
-        			
-        		tigerCounter.setTextFill(Color.RED);
-        		tigerCounter.setFont(new Font("Arial",30));
-        			
-        		root.getChildren().remove(goatCounter);
-        		root.getChildren().add(tigerCounter);
-        		
-            	
-            	
-            	goatWon();
-            	
-        		
-        		
-        	}
-        		
-            	
-            
-        });
-        
-        
-        new Thread(sleeper).start();
 		
 		
+		if(click2ForGoat) {
+			
+			Line colorLine;
+			
+			colorLine = new Line(alquerqueBoard.getBoardPoint()[sourceArray[0]][0],
+	    			alquerqueBoard.getBoardPoint()[sourceArray[0]][1],
+	    			alquerqueBoard.getBoardPoint()[alquerqueBoard.getPath()[sourceArray[0]][sourceArray[1]]][0],
+	    			alquerqueBoard.getBoardPoint()[alquerqueBoard.getPath()[sourceArray[0]][sourceArray[1]]][1]);
+	    	
+			colorLine.setFill(Color.valueOf("#90ee90"));
+	    	colorLine.setStroke(Color.valueOf("#90ee90"));
+	    	colorLine.setStrokeWidth(5);
+	    	
+	    	root.getChildren().add(colorLine);
+	    	
+			
+			
+			Task<Void> sleeper = new Task<Void>() {
+	            @Override
+	            protected Void call() throws Exception {
+	                try {
+	                    Thread.sleep(1500);
+	                } 
+	                
+	                catch (InterruptedException e) {
+	                }
+	                return null;
+	            }
+	        };
+	        sleeper.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+	            @Override
+	            public void handle(WorkerStateEvent event) {
+	            	 
+	            	
+	        		selectPosition = destination;
+	            		
+	        		
+	            	System.out.println("selectPosition "+selectPosition);
+	            	
+	            	System.out.println(next+" next--> "+selectPosition + " goat("+selectGoat+")");
+	        		
+	        		
+	            	alquerqueBoard.getBoardPoint()[selectPosition][2]++;
+	        		
+	            	alquerqueBoard.getBoardPoint()[next][2]--;
+	        		
+	            	killedTheTiger();
+	        		
+	            	
+	            	
+	            	
+	            	alquerqueBoard.getGoatIndex().set(selectGoat,selectPosition);
+	            	alquerqueBoard.getGoat().get(selectGoat).setStroke(Color.BLACK);
+	            		
+	            	
+	            	click1ForGoat=false;
+	            	click2ForGoat=false;
+	            	
+	            	click1ForTiger=true;
+	            	
+	            	
+	            	root.getChildren().remove(colorLine);
+	            	
+	            	
+	            	tigerCounter = new Label();
+            		tigerCounter.setText("Tiger's turn");
+            		tigerCounter.relocate((5*(double)screenWidth)/8,
+            				(1*(double)screenHeight)/12);
+            			
+            		tigerCounter.setTextFill(Color.RED);
+            		tigerCounter.setFont(new Font("Arial",30));
+            			
+            		root.getChildren().remove(goatCounter);
+            		root.getChildren().add(tigerCounter);
+            				
+            		goatWon();
+	        		
+	        	}
+	        		
+	            	
+	            
+	        });
+	        
+	        
+	        new Thread(sleeper).start();
+				
+	        
+	        
+    		
+    		
+			
+		}	
 		
 	}
 	
@@ -594,6 +675,9 @@ public class HardLevelAgainstGoat  extends Application {
     		alquerqueBoard.getTiger().get(i).setCenterY
     		(alquerqueBoard.getBoardPoint()[alquerqueBoard.getTigerIndex().get(i)][1]);
     	}
+    	
+    	
+    	
     	
 	}
 	
@@ -852,7 +936,7 @@ public class HardLevelAgainstGoat  extends Application {
 			root.getChildren().add(label);
 			root.getChildren().remove(goatCounter);
 			
-			flagForReturnToMenu=1;
+			flagForReturnToHardLevel=1;
 			
 			click1ForGoat=false;
 			//click2ForGoat=false;
@@ -963,7 +1047,7 @@ public class HardLevelAgainstGoat  extends Application {
 			root.getChildren().add(label);
 			root.getChildren().remove(tigerCounter);
 			
-			flagForReturnToMenu=1;
+			flagForReturnToHardLevel=1;
 			
 			click1ForGoat=false;
 			//click2ForGoat=false;
@@ -1059,7 +1143,7 @@ public class HardLevelAgainstGoat  extends Application {
 			                callbyDestination=firstStep;
 		                    
 		                    
-			                int moveValue = minimax(boardPoint,-1000000,1000000,2,true);
+			                int moveValue = minimax(boardPoint,-1000000,1000000,3,true);
 			                
 		                    
 			                if(flagForKillTheTiger==1) {
@@ -1122,7 +1206,7 @@ public class HardLevelAgainstGoat  extends Application {
 	
 	
 	
-	public int minimax(int[][] boardPoint,int alpha,int beta, int depth, boolean isMax) {
+	public int minimax(int[][] boardPoint,int alpha,int beta, int depth, boolean isMin) {
 		
 		time++;
 
@@ -1151,7 +1235,7 @@ public class HardLevelAgainstGoat  extends Application {
 			return rate;
 		}
 		
-		if(isMax) {
+		if(isMin) {
 			
 			//System.out.println("in Max here");
 			
@@ -1184,7 +1268,7 @@ public class HardLevelAgainstGoat  extends Application {
 			                    direction=j;
 								
 								
-			                    beta= Math.min( beta,minimax(boardPoint,alpha,beta, depth-1, !isMax) );
+			                    beta= Math.min( beta,minimax(boardPoint,alpha,beta, depth-1, !isMin) );
 								
 								
 								
@@ -1213,7 +1297,7 @@ public class HardLevelAgainstGoat  extends Application {
 			                    direction=j;
 								
 								
-			                    beta= Math.min( beta,minimax(boardPoint,alpha,beta, depth-1, !isMax) );
+			                    beta= Math.min( beta,minimax(boardPoint,alpha,beta, depth-1, !isMin) );
 								
 								boardPoint[element][2]=100;
 								boardPoint[firstStep][2]++;
@@ -1283,7 +1367,7 @@ public class HardLevelAgainstGoat  extends Application {
 			                    currentDestination=firstStep;
 			                    direction=j;
 								
-			                    alpha = Math.max(alpha,minimax(boardPoint,alpha,beta, depth-1, !isMax) );
+			                    alpha = Math.max(alpha,minimax(boardPoint,alpha,beta, depth-1, !isMin) );
 			                    
 			                    
 			                    if(flagForKillTheTiger==1) {
